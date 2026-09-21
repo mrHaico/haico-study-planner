@@ -1,0 +1,4781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
+
+<title>HAICO Study Planner</title>
+
+<meta
+    name="description"
+    content="HAICO Study Planner - Smart study planning, reminders and timer."
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<style>
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+:root {
+    --primary: #6c5ce7;
+    --primary-dark: #5545d0;
+    --secondary: #00b894;
+
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #171923;
+    --muted: #747b8c;
+    --border: #e7e9ef;
+
+    --danger: #e74c3c;
+    --warning: #f39c12;
+    --success: #00b894;
+
+    --shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+body.dark {
+    --bg: #10121a;
+    --card: #191c27;
+    --text: #f4f5f8;
+    --muted: #a3a8b8;
+    --border: #292d3b;
+
+    --shadow:
+        0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+
+    background: var(--bg);
+    color: var(--text);
+
+    min-height: 100vh;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    -webkit-overflow-scrolling: touch;
+
+    transition:
+        background .3s ease,
+        color .3s ease;
+}
+
+body.modal-open {
+    overflow: hidden !important;
+    touch-action: none;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+img {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.top-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    background: var(--card);
+
+    border-bottom:
+        1px solid var(--border);
+
+    padding: 12px 16px;
+}
+
+.header-inner {
+    width: min(1200px, 100%);
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+.brand-logo {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            #8b7cf7
+        );
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 800;
+    font-size: 18px;
+}
+
+.brand-text {
+    min-width: 0;
+}
+
+.brand-text strong {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.brand-text span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 2px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 7px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 11px;
+
+    background: var(--bg);
+    color: var(--text);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.nav {
+    position: sticky;
+    top: 67px;
+
+    z-index: 900;
+
+    background: var(--card);
+
+    border-bottom:
+        1px solid var(--border);
+
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.nav::-webkit-scrollbar {
+    display: none;
+}
+
+.nav-inner {
+    width: min(1200px, 100%);
+    margin: auto;
+
+    display: flex;
+
+    gap: 6px;
+
+    padding: 8px 12px;
+}
+
+.nav-btn {
+    flex-shrink: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    padding: 10px 13px;
+
+    border-radius: 11px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+.nav-btn.active {
+    background:
+        rgba(108, 92, 231, .12);
+
+    color: var(--primary);
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+main {
+    width: 100%;
+}
+
+.container {
+    width: min(1200px, 100%);
+
+    margin: auto;
+
+    padding:
+        22px
+        16px
+        50px;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.page-section {
+    display: none;
+
+    animation:
+        sectionIn .25s ease;
+}
+
+.page-section.active {
+    display: block;
+}
+
+@keyframes sectionIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   TITLES
+========================================================= */
+
+.page-title {
+    margin-bottom: 20px;
+}
+
+.page-title h1 {
+    font-size:
+        clamp(23px, 5vw, 32px);
+
+    font-weight: 800;
+
+    margin-bottom: 5px;
+}
+
+.page-title p {
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 17px;
+
+    box-shadow: var(--shadow);
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(108, 92, 231, .12);
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 11px;
+}
+
+.stat-card h3 {
+    font-size: 24px;
+    font-weight: 800;
+
+    margin-bottom: 4px;
+}
+
+.stat-card p {
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    box-shadow: var(--shadow);
+
+    margin-bottom: 18px;
+}
+
+.card-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 15px;
+}
+
+.card-header h2 {
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.card-header p {
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+    border: none;
+
+    min-height: 44px;
+
+    padding: 10px 15px;
+
+    border-radius: 12px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.btn:active {
+    transform: scale(.98);
+}
+
+.btn.primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn.primary:hover {
+    background: var(--primary-dark);
+}
+
+.btn.secondary {
+    background: var(--bg);
+
+    color: var(--text);
+
+    border:
+        1px solid var(--border);
+}
+
+.btn.success {
+    background: var(--success);
+    color: white;
+}
+
+.btn.danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn.full {
+    width: 100%;
+}
+
+
+/* =========================================================
+   TASKS
+========================================================= */
+
+.task-list {
+    display: grid;
+    gap: 12px;
+}
+
+.task-item {
+    background: var(--bg);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 15px;
+
+    padding: 15px;
+}
+
+.task-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+.task-info {
+    min-width: 0;
+}
+
+.task-info h3 {
+    font-size: 15px;
+
+    font-weight: 800;
+
+    margin-bottom: 4px;
+}
+
+.task-topic {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-bottom: 9px;
+}
+
+.task-meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+}
+
+.badge {
+    padding: 5px 8px;
+
+    border-radius: 8px;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.priority-high {
+    color: var(--danger);
+}
+
+.priority-medium {
+    color: var(--warning);
+}
+
+.priority-low {
+    color: var(--success);
+}
+
+.task-actions {
+    display: flex;
+
+    gap: 6px;
+
+    margin-top: 13px;
+
+    flex-wrap: wrap;
+}
+
+.task-action {
+    border:
+        1px solid var(--border);
+
+    background: var(--card);
+
+    color: var(--text);
+
+    border-radius: 9px;
+
+    padding: 8px 10px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.task-action.complete {
+    color: var(--success);
+}
+
+.task-action.delete {
+    color: var(--danger);
+}
+
+.task-completed {
+    opacity: .6;
+}
+
+.task-completed h3 {
+    text-decoration: line-through;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-state {
+    text-align: center;
+
+    padding: 35px 15px;
+
+    color: var(--muted);
+}
+
+.empty-state i {
+    font-size: 34px;
+
+    opacity: .45;
+
+    margin-bottom: 10px;
+}
+
+.empty-state h3 {
+    color: var(--text);
+
+    font-size: 15px;
+
+    margin-bottom: 5px;
+}
+
+.empty-state p {
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.filters {
+    display: flex;
+
+    gap: 7px;
+
+    overflow-x: auto;
+
+    margin-bottom: 15px;
+}
+
+.filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-btn {
+    flex-shrink: 0;
+
+    border:
+        1px solid var(--border);
+
+    background: var(--card);
+
+    color: var(--muted);
+
+    padding: 9px 13px;
+
+    border-radius: 10px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.filter-btn.active {
+    background: var(--primary);
+
+    color: white;
+
+    border-color: var(--primary);
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+}
+
+.form-group {
+    margin-bottom: 13px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    border:
+        1px solid var(--border);
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    border-radius: 11px;
+
+    padding: 12px;
+
+    outline: none;
+
+    font-size: 13px;
+}
+
+.form-group textarea {
+    min-height: 90px;
+
+    resize: vertical;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);
+}
+
+
+/* =========================================================
+   TRUE CENTER MODAL
+========================================================= */
+
+.modal {
+    position: fixed !important;
+
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 100vw !important;
+    height: 100vh !important;
+
+    display: none;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 14px !important;
+
+    background:
+        rgba(0, 0, 0, .68);
+
+    backdrop-filter: blur(7px);
+
+    -webkit-backdrop-filter: blur(7px);
+
+    z-index: 999999 !important;
+
+    overflow: hidden !important;
+}
+
+.modal.show {
+    display: flex !important;
+}
+
+
+/* =========================================================
+   MODAL WINDOW
+========================================================= */
+
+.modal-content {
+    position: relative !important;
+
+    width: 100% !important;
+
+    max-width: 510px !important;
+
+    max-height:
+        calc(100vh - 28px) !important;
+
+    margin: 0 auto !important;
+
+    background: var(--card);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 22px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    flex-direction: column;
+
+    opacity: 0;
+
+    transform:
+        translateY(-90px)
+        scale(.95);
+}
+
+
+/* =========================================================
+   MODAL OPEN ANIMATION
+========================================================= */
+
+.modal-content.modal-opening {
+
+    animation:
+        modalDropCenter
+        .38s
+        cubic-bezier(.22, .8, .25, 1)
+        forwards;
+}
+
+@keyframes modalDropCenter {
+
+    0% {
+        opacity: 0;
+
+        transform:
+            translateY(-90px)
+            scale(.95);
+    }
+
+    60% {
+        opacity: 1;
+
+        transform:
+            translateY(8px)
+            scale(1.01);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.modal-header {
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 17px 18px;
+
+    background: var(--card);
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+.modal-title-area {
+    min-width: 0;
+}
+
+.modal-title-area h2 {
+    font-size: 18px;
+
+    font-weight: 800;
+
+    margin-bottom: 3px;
+}
+
+.modal-title-area p {
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.close-modal {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   MODAL BODY
+========================================================= */
+
+.modal-body {
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    -webkit-overflow-scrolling: touch;
+
+    overscroll-behavior: contain;
+
+    padding: 18px;
+}
+
+.modal-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: var(--border);
+
+    border-radius: 20px;
+}
+
+
+/* =========================================================
+   MODAL ACTIONS
+========================================================= */
+
+.modal-actions {
+    display: flex;
+
+    gap: 9px;
+
+    padding-top: 4px;
+
+    padding-bottom: 2px;
+}
+
+.modal-actions .btn {
+    flex: 1;
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+.timer-card {
+    max-width: 650px;
+
+    margin: auto;
+
+    text-align: center;
+}
+
+.timer-mode {
+    color: var(--muted);
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+.timer-display {
+    font-size:
+        clamp(55px, 18vw, 105px);
+
+    font-weight: 800;
+
+    letter-spacing: -4px;
+
+    line-height: 1;
+
+    margin: 20px 0;
+}
+
+.timer-presets {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    overflow-x: auto;
+
+    margin: 20px 0;
+}
+
+.timer-presets::-webkit-scrollbar {
+    display: none;
+}
+
+.preset-btn {
+    flex-shrink: 0;
+
+    border:
+        1px solid var(--border);
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    border-radius: 10px;
+
+    padding: 9px 13px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.preset-btn.active {
+    background: var(--primary);
+
+    color: white;
+
+    border-color: var(--primary);
+}
+
+.timer-controls {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+.notification-box {
+    padding: 16px;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(108,92,231,.12),
+            rgba(0,184,148,.08)
+        );
+
+    border:
+        1px solid var(--border);
+
+    margin-bottom: 18px;
+}
+
+.notification-box h3 {
+    font-size: 14px;
+
+    margin-bottom: 6px;
+}
+
+.notification-box p {
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+    margin-bottom: 12px;
+}
+
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about-profile {
+    max-width: 700px;
+
+    margin: auto;
+
+    text-align: center;
+}
+
+.profile-photo {
+    width: 125px;
+    height: 125px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 5px solid var(--card);
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.2);
+
+    margin-bottom: 15px;
+}
+
+.about-profile h2 {
+    font-size: 21px;
+
+    margin-bottom: 5px;
+}
+
+.brand-name {
+    color: var(--primary);
+
+    font-weight: 800;
+
+    font-size: 13px;
+
+    margin-bottom: 10px;
+}
+
+.about-profile > p {
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+.feature-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+.feature-box {
+    padding: 15px;
+
+    background: var(--bg);
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    text-align: left;
+}
+
+.feature-box i {
+    color: var(--primary);
+
+    font-size: 18px;
+
+    margin-bottom: 8px;
+}
+
+.feature-box h3 {
+    font-size: 13px;
+
+    margin-bottom: 4px;
+}
+
+.feature-box p {
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast-container {
+    position: fixed;
+
+    left: 50%;
+    bottom: 20px;
+
+    transform: translateX(-50%);
+
+    width:
+        min(
+            calc(100% - 30px),
+            420px
+        );
+
+    z-index: 1000000;
+
+    pointer-events: none;
+}
+
+.toast {
+    background: var(--text);
+
+    color: var(--card);
+
+    padding: 13px 15px;
+
+    border-radius: 13px;
+
+    font-size: 11px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.25);
+
+    margin-top: 8px;
+
+    animation:
+        toastIn .25s ease;
+}
+
+@keyframes toastIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .top-header {
+        position: relative;
+    }
+
+    .nav {
+        position: sticky;
+        top: 0;
+    }
+
+    .container {
+        padding:
+            18px
+            14px
+            45px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .stats-grid {
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 14px;
+    }
+
+    .stat-card h3 {
+        font-size: 21px;
+    }
+
+
+    /* =====================================
+       MODAL MOBILE CENTER
+    ===================================== */
+
+    .modal {
+
+        padding:
+            10px !important;
+
+    }
+
+    .modal-content {
+
+        width:
+            calc(100vw - 20px) !important;
+
+        max-width:
+            none !important;
+
+        max-height:
+            calc(100vh - 20px) !important;
+
+        border-radius:
+            20px;
+
+    }
+
+    .modal-header {
+        padding:
+            15px;
+    }
+
+    .modal-body {
+        padding:
+            15px;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =========================================================
+   SMALL HEIGHT PHONE
+========================================================= */
+
+@media (max-height: 650px) {
+
+    .modal {
+
+        padding:
+            7px !important;
+
+    }
+
+    .modal-content {
+
+        width:
+            calc(100vw - 14px) !important;
+
+        max-height:
+            calc(100vh - 14px) !important;
+
+    }
+
+    .modal-header {
+        padding:
+            11px 13px;
+    }
+
+    .modal-body {
+        padding:
+            12px;
+    }
+
+    .form-group {
+        margin-bottom:
+            9px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding:
+            10px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="top-header">
+
+    <div class="header-inner">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                H
+            </div>
+
+            <div class="brand-text">
+
+                <strong>
+                    HAICO TECH & DESIGN
+                </strong>
+
+                <span>
+                    HAICO Study Planner
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                class="icon-btn"
+                id="themeBtn"
+                type="button"
+                onclick="toggleTheme()"
+            >
+                <i class="fas fa-moon"></i>
+            </button>
+
+
+            <button
+                class="icon-btn"
+                type="button"
+                onclick="toggleLanguage()"
+            >
+                <span id="languageText">
+                    SW
+                </span>
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<nav class="nav">
+
+    <div class="nav-inner">
+
+        <button
+            class="nav-btn active"
+            data-section="dashboard"
+            onclick="showSection('dashboard')"
+        >
+
+            <i class="fas fa-chart-pie"></i>
+
+            <span data-i18n="dashboard">
+                Dashboard
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-btn"
+            data-section="planner"
+            onclick="showSection('planner')"
+        >
+
+            <i class="fas fa-calendar-days"></i>
+
+            <span data-i18n="planner">
+                Planner
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-btn"
+            data-section="timer"
+            onclick="showSection('timer')"
+        >
+
+            <i class="fas fa-stopwatch"></i>
+
+            <span data-i18n="timer">
+                Timer
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-btn"
+            data-section="reminders"
+            onclick="showSection('reminders')"
+        >
+
+            <i class="fas fa-bell"></i>
+
+            <span data-i18n="reminders">
+                Reminders
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-btn"
+            data-section="about"
+            onclick="showSection('about')"
+        >
+
+            <i class="fas fa-circle-info"></i>
+
+            <span data-i18n="about">
+                About
+            </span>
+
+        </button>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main>
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<section
+    id="dashboard"
+    class="page-section active"
+>
+
+<div class="container">
+
+    <div class="page-title">
+
+        <h1 data-i18n="welcome">
+            Welcome Back 👋
+        </h1>
+
+        <p data-i18n="dashboardDesc">
+            Plan your studies, manage your tasks and stay focused.
+        </p>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fas fa-list-check"></i>
+            </div>
+
+            <h3 id="totalTasks">
+                0
+            </h3>
+
+            <p data-i18n="totalTasks">
+                Total Tasks
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <h3 id="completedTasks">
+                0
+            </h3>
+
+            <p data-i18n="completed">
+                Completed
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+
+            <h3 id="pendingTasks">
+                0
+            </h3>
+
+            <p data-i18n="pending">
+                Pending
+            </p>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+
+            <h3 id="studyTime">
+                0m
+            </h3>
+
+            <p data-i18n="studyTime">
+                Study Time
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- DASHBOARD ADD TASK -->
+    <div class="card">
+
+        <div class="card-header">
+
+            <div>
+
+                <h2 data-i18n="quickActions">
+                    Quick Actions
+                </h2>
+
+                <p>
+                    HAICO Study Planner
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="btn primary full"
+            type="button"
+            onclick="goToPlannerAndAddTask()"
+        >
+
+            <i class="fas fa-plus"></i>
+
+            <span data-i18n="addTask">
+                Add Task
+            </span>
+
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2 data-i18n="recentTasks">
+                Recent Tasks
+            </h2>
+
+            <button
+                class="btn secondary"
+                type="button"
+                onclick="showSection('planner')"
+            >
+                <span data-i18n="viewAll">
+                    View All
+                </span>
+            </button>
+
+        </div>
+
+
+        <div
+            class="task-list"
+            id="dashboardTasks"
+        ></div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     PLANNER
+===================================================== -->
+
+<section
+    id="planner"
+    class="page-section"
+>
+
+<div class="container">
+
+    <div class="page-title">
+
+        <h1 data-i18n="planner">
+            Planner
+        </h1>
+
+        <p data-i18n="plannerDesc">
+            Organize your study tasks and schedule.
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2 data-i18n="myTasks">
+                My Tasks
+            </h2>
+
+            <button
+                class="btn primary"
+                type="button"
+                onclick="openTaskModal()"
+            >
+
+                <i class="fas fa-plus"></i>
+
+                <span data-i18n="addTask">
+                    Add Task
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <div class="filters">
+
+            <button
+                class="filter-btn active"
+                data-filter="all"
+                type="button"
+                onclick="setFilter('all', this)"
+            >
+                All
+            </button>
+
+            <button
+                class="filter-btn"
+                data-filter="pending"
+                type="button"
+                onclick="setFilter('pending', this)"
+            >
+                Pending
+            </button>
+
+            <button
+                class="filter-btn"
+                data-filter="completed"
+                type="button"
+                onclick="setFilter('completed', this)"
+            >
+                Completed
+            </button>
+
+            <button
+                class="filter-btn"
+                data-filter="today"
+                type="button"
+                onclick="setFilter('today', this)"
+            >
+                Today
+            </button>
+
+            <button
+                class="filter-btn"
+                data-filter="upcoming"
+                type="button"
+                onclick="setFilter('upcoming', this)"
+            >
+                Upcoming
+            </button>
+
+        </div>
+
+
+        <div
+            class="task-list"
+            id="plannerTasks"
+        ></div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     TIMER
+===================================================== -->
+
+<section
+    id="timer"
+    class="page-section"
+>
+
+<div class="container">
+
+    <div class="page-title">
+
+        <h1 data-i18n="timer">
+            Timer
+        </h1>
+
+        <p data-i18n="timerDesc">
+            Stay focused using a simple study timer.
+        </p>
+
+    </div>
+
+
+    <div class="card timer-card">
+
+        <div class="timer-mode">
+            Study Session
+        </div>
+
+
+        <div
+            class="timer-display"
+            id="timerDisplay"
+        >
+            25:00
+        </div>
+
+
+        <div class="timer-presets">
+
+            <button
+                class="preset-btn active"
+                type="button"
+                onclick="setTimer(25, this)"
+            >
+                25 min
+            </button>
+
+            <button
+                class="preset-btn"
+                type="button"
+                onclick="setTimer(50, this)"
+            >
+                50 min
+            </button>
+
+            <button
+                class="preset-btn"
+                type="button"
+                onclick="setTimer(90, this)"
+            >
+                90 min
+            </button>
+
+            <button
+                class="preset-btn"
+                type="button"
+                onclick="customTimer()"
+            >
+                Custom
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Current Task
+            </label>
+
+            <select id="timerTaskSelect">
+
+                <option value="">
+                    No task selected
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="timer-controls">
+
+            <button
+                class="btn primary"
+                type="button"
+                id="timerStartBtn"
+                onclick="startTimer()"
+            >
+
+                <i class="fas fa-play"></i>
+
+                Start
+
+            </button>
+
+
+            <button
+                class="btn secondary"
+                type="button"
+                onclick="pauseTimer()"
+            >
+
+                <i class="fas fa-pause"></i>
+
+                Pause
+
+            </button>
+
+
+            <button
+                class="btn danger"
+                type="button"
+                onclick="resetTimer()"
+            >
+
+                <i class="fas fa-rotate-left"></i>
+
+                Reset
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     REMINDERS
+===================================================== -->
+
+<section
+    id="reminders"
+    class="page-section"
+>
+
+<div class="container">
+
+    <div class="page-title">
+
+        <h1>
+            Reminders
+        </h1>
+
+        <p>
+            Get reminders for your scheduled study tasks.
+        </p>
+
+    </div>
+
+
+    <div class="notification-box">
+
+        <h3>
+
+            <i class="fas fa-bell"></i>
+
+            Browser Notifications
+
+        </h3>
+
+
+        <p>
+            Enable notifications to receive reminder alerts while the planner is open.
+        </p>
+
+
+        <button
+            class="btn primary"
+            type="button"
+            onclick="enableNotifications()"
+        >
+
+            <i class="fas fa-bell"></i>
+
+            Enable Notifications
+
+        </button>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="card-header">
+
+            <h2>
+                Scheduled Tasks
+            </h2>
+
+        </div>
+
+
+        <div
+            class="task-list"
+            id="reminderTasks"
+        ></div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section
+    id="about"
+    class="page-section"
+>
+
+<div class="container">
+
+    <div class="card about-profile">
+
+        <img
+            src="ibn-haico.jpg"
+            alt="Ibn Haico"
+            class="profile-photo"
+        >
+
+
+        <h2>
+            HAICO Study Planner
+        </h2>
+
+
+        <div class="brand-name">
+            HAICO TECH & DESIGN
+        </div>
+
+
+        <p>
+            Your Idea. Our Creativity. One Digital Solution.
+        </p>
+
+
+        <div class="feature-grid">
+
+            <div class="feature-box">
+
+                <i class="fas fa-calendar-check"></i>
+
+                <h3>
+                    Smart Planner
+                </h3>
+
+                <p>
+                    Organize your daily study tasks and schedules.
+                </p>
+
+            </div>
+
+
+            <div class="feature-box">
+
+                <i class="fas fa-stopwatch"></i>
+
+                <h3>
+                    Study Timer
+                </h3>
+
+                <p>
+                    Use focused study sessions to manage your time.
+                </p>
+
+            </div>
+
+
+            <div class="feature-box">
+
+                <i class="fas fa-bell"></i>
+
+                <h3>
+                    Reminders
+                </h3>
+
+                <p>
+                    Set study reminders and browser notifications.
+                </p>
+
+            </div>
+
+
+            <div class="feature-box">
+
+                <i class="fas fa-mobile-screen"></i>
+
+                <h3>
+                    Mobile Friendly
+                </h3>
+
+                <p>
+                    Designed to work comfortably on smartphones.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div style="margin-top:25px;">
+
+            <p>
+                Created by
+                <strong>
+                    Ibn Haico
+                </strong>
+                —
+                <strong>
+                    HAICO TECH & DESIGN
+                </strong>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     ADD / EDIT TASK MODAL
+     
+     IMPORTANT:
+     Modal is OUTSIDE all sections/cards.
+     This prevents it from appearing at the
+     bottom of Dashboard or Planner.
+===================================================== -->
+
+<div
+    class="modal"
+    id="taskModal"
+>
+
+    <div
+        class="modal-content"
+        id="taskModalContent"
+    >
+
+        <div class="modal-header">
+
+            <div class="modal-title-area">
+
+                <h2 id="modalTitle">
+                    Add Task
+                </h2>
+
+                <p>
+                    Plan your study session
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="close-modal"
+                onclick="closeTaskModal()"
+            >
+
+                <i class="fas fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+
+        <div class="modal-body">
+
+            <form id="taskForm">
+
+                <input
+                    type="hidden"
+                    id="editTaskId"
+                >
+
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Subject *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="taskSubject"
+                            placeholder="e.g. Radiology"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Topic
+                        </label>
+
+                        <input
+                            type="text"
+                            id="taskTopic"
+                            placeholder="e.g. X-ray Physics"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Date *
+                        </label>
+
+                        <input
+                            type="date"
+                            id="taskDate"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Start Time *
+                        </label>
+
+                        <input
+                            type="time"
+                            id="taskTime"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Duration
+                        </label>
+
+                        <select id="taskDuration">
+
+                            <option value="25">
+                                25 minutes
+                            </option>
+
+                            <option value="50">
+                                50 minutes
+                            </option>
+
+                            <option value="90">
+                                90 minutes
+                            </option>
+
+                            <option value="120">
+                                120 minutes
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Priority
+                        </label>
+
+                        <select id="taskPriority">
+
+                            <option value="low">
+                                Low
+                            </option>
+
+                            <option
+                                value="medium"
+                                selected
+                            >
+                                Medium
+                            </option>
+
+                            <option value="high">
+                                High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Reminder Message
+                        </label>
+
+                        <input
+                            type="text"
+                            id="taskReminder"
+                            placeholder="e.g. Time to study Radiology"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Notes
+                        </label>
+
+                        <textarea
+                            id="taskNotes"
+                            rows="4"
+                            placeholder="Add notes about this study task..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="btn secondary"
+                        onclick="closeTaskModal()"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="btn primary"
+                    >
+
+                        <i class="fas fa-check"></i>
+
+                        <span id="saveTaskText">
+                            Save Task
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+
+<script>
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+const TASK_KEY =
+    "haico_study_tasks_v4";
+
+const SETTINGS_KEY =
+    "haico_study_settings_v4";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let tasks =
+    JSON.parse(
+        localStorage.getItem(
+            TASK_KEY
+        ) || "[]"
+    );
+
+let settings =
+    JSON.parse(
+        localStorage.getItem(
+            SETTINGS_KEY
+        ) ||
+        '{"theme":"light","language":"en"}'
+    );
+
+let currentFilter =
+    "all";
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+let timerInterval =
+    null;
+
+let timerSeconds =
+    25 * 60;
+
+let timerInitialSeconds =
+    25 * 60;
+
+let timerRunning =
+    false;
+
+
+/* =========================================================
+   TRANSLATIONS
+========================================================= */
+
+const translations = {
+
+    en: {
+
+        dashboard:
+            "Dashboard",
+
+        planner:
+            "Planner",
+
+        timer:
+            "Timer",
+
+        reminders:
+            "Reminders",
+
+        about:
+            "About",
+
+        welcome:
+            "Welcome Back 👋",
+
+        dashboardDesc:
+            "Plan your studies, manage your tasks and stay focused.",
+
+        totalTasks:
+            "Total Tasks",
+
+        completed:
+            "Completed",
+
+        pending:
+            "Pending",
+
+        studyTime:
+            "Study Time",
+
+        quickActions:
+            "Quick Actions",
+
+        addTask:
+            "Add Task",
+
+        recentTasks:
+            "Recent Tasks",
+
+        viewAll:
+            "View All",
+
+        plannerDesc:
+            "Organize your study tasks and schedule.",
+
+        myTasks:
+            "My Tasks",
+
+        timerDesc:
+            "Stay focused using a simple study timer."
+
+    },
+
+
+    sw: {
+
+        dashboard:
+            "Dashibodi",
+
+        planner:
+            "Ratiba",
+
+        timer:
+            "Timer",
+
+        reminders:
+            "Vikumbusho",
+
+        about:
+            "Kuhusu",
+
+        welcome:
+            "Karibu Tena 👋",
+
+        dashboardDesc:
+            "Panga masomo yako, simamia kazi zako na zingatia muda.",
+
+        totalTasks:
+            "Kazi Zote",
+
+        completed:
+            "Zilizokamilika",
+
+        pending:
+            "Zinasubiri",
+
+        studyTime:
+            "Muda wa Kusoma",
+
+        quickActions:
+            "Vitendo vya Haraka",
+
+        addTask:
+            "Ongeza Kazi",
+
+        recentTasks:
+            "Kazi za Hivi Karibuni",
+
+        viewAll:
+            "Tazama Zote",
+
+        plannerDesc:
+            "Panga kazi zako za masomo na ratiba.",
+
+        myTasks:
+            "Kazi Zangu",
+
+        timerDesc:
+            "Tumia timer rahisi kuongeza umakini wakati wa kusoma."
+
+    }
+
+};
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        applySettings();
+
+        renderAll();
+
+        updateTimerDisplay();
+
+        startReminderChecker();
+
+    }
+);
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function saveSettings() {
+
+    localStorage.setItem(
+        SETTINGS_KEY,
+        JSON.stringify(settings)
+    );
+
+}
+
+
+function applySettings() {
+
+    const themeIcon =
+        document.querySelector(
+            "#themeBtn i"
+        );
+
+
+    if (
+        settings.theme ===
+        "dark"
+    ) {
+
+        document.body.classList.add(
+            "dark"
+        );
+
+        themeIcon.className =
+            "fas fa-sun";
+
+    } else {
+
+        document.body.classList.remove(
+            "dark"
+        );
+
+        themeIcon.className =
+            "fas fa-moon";
+
+    }
+
+
+    document.getElementById(
+        "languageText"
+    ).textContent =
+        settings.language === "en"
+            ? "SW"
+            : "EN";
+
+
+    const lang =
+        translations[
+            settings.language
+        ];
+
+
+    document
+        .querySelectorAll(
+            "[data-i18n]"
+        )
+        .forEach(
+            element => {
+
+                const key =
+                    element.dataset.i18n;
+
+                if (lang[key]) {
+
+                    element.textContent =
+                        lang[key];
+
+                }
+
+            }
+        );
+
+}
+
+
+function toggleTheme() {
+
+    settings.theme =
+        settings.theme === "dark"
+            ? "light"
+            : "dark";
+
+    saveSettings();
+
+    applySettings();
+
+}
+
+
+function toggleLanguage() {
+
+    settings.language =
+        settings.language === "en"
+            ? "sw"
+            : "en";
+
+    saveSettings();
+
+    applySettings();
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function showSection(
+    sectionId
+) {
+
+    document
+        .querySelectorAll(
+            ".page-section"
+        )
+        .forEach(
+            section => {
+
+                section.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    const target =
+        document.getElementById(
+            sectionId
+        );
+
+
+    if (target) {
+
+        target.classList.add(
+            "active"
+        );
+
+    }
+
+
+    document
+        .querySelectorAll(
+            ".nav-btn"
+        )
+        .forEach(
+            button => {
+
+                button.classList.remove(
+                    "active"
+                );
+
+
+                if (
+                    button.dataset.section ===
+                    sectionId
+                ) {
+
+                    button.classList.add(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+
+    renderAll();
+
+}
+
+
+/* =========================================================
+   DASHBOARD ADD TASK
+   Dashboard -> Planner -> Modal
+========================================================= */
+
+function goToPlannerAndAddTask() {
+
+    /*
+       Step 1:
+       Go to Planner
+    */
+
+    showSection(
+        "planner"
+    );
+
+
+    /*
+       Step 2:
+       Wait for Planner to render,
+       then open the modal.
+    */
+
+    setTimeout(
+        function() {
+
+            openTaskModal();
+
+        },
+        150
+    );
+
+}
+
+
+/* =========================================================
+   OPEN MODAL
+========================================================= */
+
+function openTaskModal(
+    taskId = null
+) {
+
+    const modal =
+        document.getElementById(
+            "taskModal"
+        );
+
+
+    const content =
+        document.getElementById(
+            "taskModalContent"
+        );
+
+
+    if (!modal || !content) {
+
+        return;
+
+    }
+
+
+    if (taskId) {
+
+        const task =
+            tasks.find(
+                item =>
+                    String(item.id) ===
+                    String(taskId)
+            );
+
+
+        if (!task) {
+
+            return;
+
+        }
+
+
+        document.getElementById(
+            "modalTitle"
+        ).textContent =
+            "Edit Task";
+
+
+        document.getElementById(
+            "saveTaskText"
+        ).textContent =
+            "Update Task";
+
+
+        document.getElementById(
+            "editTaskId"
+        ).value =
+            task.id;
+
+
+        document.getElementById(
+            "taskSubject"
+        ).value =
+            task.subject || "";
+
+
+        document.getElementById(
+            "taskTopic"
+        ).value =
+            task.topic || "";
+
+
+        document.getElementById(
+            "taskDate"
+        ).value =
+            task.date || "";
+
+
+        document.getElementById(
+            "taskTime"
+        ).value =
+            task.time || "";
+
+
+        document.getElementById(
+            "taskDuration"
+        ).value =
+            task.duration || 25;
+
+
+        document.getElementById(
+            "taskPriority"
+        ).value =
+            task.priority || "medium";
+
+
+        document.getElementById(
+            "taskReminder"
+        ).value =
+            task.reminderMessage || "";
+
+
+        document.getElementById(
+            "taskNotes"
+        ).value =
+            task.notes || "";
+
+    } else {
+
+        resetTaskForm();
+
+    }
+
+
+    /*
+       Open modal
+    */
+
+    modal.classList.add(
+        "show"
+    );
+
+
+    /*
+       Lock page
+    */
+
+    document.body.classList.add(
+        "modal-open"
+    );
+
+
+    /*
+       Restart animation
+       every time.
+    */
+
+    content.classList.remove(
+        "modal-opening"
+    );
+
+
+    void content.offsetWidth;
+
+
+    content.classList.add(
+        "modal-opening"
+    );
+
+
+    /*
+       Start modal body
+       from top.
+    */
+
+    const body =
+        modal.querySelector(
+            ".modal-body"
+        );
+
+
+    if (body) {
+
+        body.scrollTop = 0;
+
+    }
+
+
+    /*
+       Focus subject on desktop.
+       Small delay avoids mobile
+       keyboard jumping immediately.
+    */
+
+    setTimeout(
+        function() {
+
+            const subject =
+                document.getElementById(
+                    "taskSubject"
+                );
+
+            if (
+                subject &&
+                window.innerWidth > 600
+            ) {
+
+                subject.focus();
+
+            }
+
+        },
+        300
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeTaskModal() {
+
+    const modal =
+        document.getElementById(
+            "taskModal"
+        );
+
+
+    if (!modal) return;
+
+
+    modal.classList.remove(
+        "show"
+    );
+
+
+    document.body.classList.remove(
+        "modal-open"
+    );
+
+
+    resetTaskForm();
+
+}
+
+
+/* =========================================================
+   RESET FORM
+========================================================= */
+
+function resetTaskForm() {
+
+    const form =
+        document.getElementById(
+            "taskForm"
+        );
+
+
+    if (form) {
+
+        form.reset();
+
+    }
+
+
+    document.getElementById(
+        "editTaskId"
+    ).value = "";
+
+
+    document.getElementById(
+        "modalTitle"
+    ).textContent =
+        "Add Task";
+
+
+    document.getElementById(
+        "saveTaskText"
+    ).textContent =
+        "Save Task";
+
+
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    document.getElementById(
+        "taskDate"
+    ).value =
+        today;
+
+
+    document.getElementById(
+        "taskPriority"
+    ).value =
+        "medium";
+
+
+    document.getElementById(
+        "taskDuration"
+    ).value =
+        "25";
+
+}
+
+
+/* =========================================================
+   OUTSIDE CLICK
+========================================================= */
+
+document
+    .getElementById(
+        "taskModal"
+    )
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target ===
+                this
+            ) {
+
+                closeTaskModal();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   ESC
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key ===
+            "Escape"
+        ) {
+
+            const modal =
+                document.getElementById(
+                    "taskModal"
+                );
+
+
+            if (
+                modal.classList.contains(
+                    "show"
+                )
+            ) {
+
+                closeTaskModal();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   FORM SUBMIT
+========================================================= */
+
+document
+    .getElementById(
+        "taskForm"
+    )
+    .addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+
+            const editId =
+                document.getElementById(
+                    "editTaskId"
+                ).value;
+
+
+            const subject =
+                document.getElementById(
+                    "taskSubject"
+                ).value.trim();
+
+
+            const topic =
+                document.getElementById(
+                    "taskTopic"
+                ).value.trim();
+
+
+            const date =
+                document.getElementById(
+                    "taskDate"
+                ).value;
+
+
+            const time =
+                document.getElementById(
+                    "taskTime"
+                ).value;
+
+
+            const duration =
+                Number(
+                    document.getElementById(
+                        "taskDuration"
+                    ).value
+                );
+
+
+            const priority =
+                document.getElementById(
+                    "taskPriority"
+                ).value;
+
+
+            const reminderMessage =
+                document.getElementById(
+                    "taskReminder"
+                ).value.trim();
+
+
+            const notes =
+                document.getElementById(
+                    "taskNotes"
+                ).value.trim();
+
+
+            if (
+                !subject ||
+                !date ||
+                !time
+            ) {
+
+                showToast(
+                    "Please fill in Subject, Date and Time."
+                );
+
+                return;
+
+            }
+
+
+            if (editId) {
+
+                const index =
+                    tasks.findIndex(
+                        task =>
+                            String(task.id) ===
+                            String(editId)
+                    );
+
+
+                if (index !== -1) {
+
+                    tasks[index] = {
+
+                        ...tasks[index],
+
+                        subject,
+                        topic,
+                        date,
+                        time,
+                        duration,
+                        priority,
+                        reminderMessage,
+                        notes
+
+                    };
+
+                }
+
+
+                showToast(
+                    "Task updated successfully."
+                );
+
+            } else {
+
+                tasks.push({
+
+                    id:
+                        Date.now(),
+
+                    subject,
+
+                    topic,
+
+                    date,
+
+                    time,
+
+                    duration,
+
+                    priority,
+
+                    reminderMessage,
+
+                    notes,
+
+                    completed:
+                        false,
+
+                    reminderSent:
+                        false,
+
+                    studySeconds:
+                        0,
+
+                    createdAt:
+                        new Date()
+                            .toISOString()
+
+                });
+
+
+                showToast(
+                    "Task added successfully."
+                );
+
+            }
+
+
+            saveTasks();
+
+            closeTaskModal();
+
+            renderAll();
+
+
+            /*
+               After saving, keep user
+               inside Planner.
+            */
+
+            showSection(
+                "planner"
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+function saveTasks() {
+
+    localStorage.setItem(
+        TASK_KEY,
+        JSON.stringify(tasks)
+    );
+
+}
+
+
+/* =========================================================
+   RENDER ALL
+========================================================= */
+
+function renderAll() {
+
+    renderDashboard();
+
+    renderPlanner();
+
+    renderReminders();
+
+    updateTimerTaskSelect();
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function renderDashboard() {
+
+    const total =
+        tasks.length;
+
+
+    const completed =
+        tasks.filter(
+            task =>
+                task.completed
+        ).length;
+
+
+    const pending =
+        total - completed;
+
+
+    const seconds =
+        tasks.reduce(
+            (
+                totalSeconds,
+                task
+            ) =>
+                totalSeconds +
+                Number(
+                    task.studySeconds || 0
+                ),
+            0
+        );
+
+
+    document.getElementById(
+        "totalTasks"
+    ).textContent =
+        total;
+
+
+    document.getElementById(
+        "completedTasks"
+    ).textContent =
+        completed;
+
+
+    document.getElementById(
+        "pendingTasks"
+    ).textContent =
+        pending;
+
+
+    document.getElementById(
+        "studyTime"
+    ).textContent =
+        formatStudyTime(
+            seconds
+        );
+
+
+    const recent =
+        [...tasks]
+            .sort(sortTasks)
+            .slice(0, 5);
+
+
+    renderTaskList(
+        "dashboardTasks",
+        recent
+    );
+
+}
+
+
+/* =========================================================
+   PLANNER
+========================================================= */
+
+function setFilter(
+    filter,
+    button
+) {
+
+    currentFilter =
+        filter;
+
+
+    document
+        .querySelectorAll(
+            ".filter-btn"
+        )
+        .forEach(
+            item =>
+                item.classList.remove(
+                    "active"
+                )
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    renderPlanner();
+
+}
+
+
+function renderPlanner() {
+
+    let filtered =
+        [...tasks];
+
+
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+    if (
+        currentFilter ===
+        "pending"
+    ) {
+
+        filtered =
+            filtered.filter(
+                task =>
+                    !task.completed
+            );
+
+    }
+
+
+    if (
+        currentFilter ===
+        "completed"
+    ) {
+
+        filtered =
+            filtered.filter(
+                task =>
+                    task.completed
+            );
+
+    }
+
+
+    if (
+        currentFilter ===
+        "today"
+    ) {
+
+        filtered =
+            filtered.filter(
+                task =>
+                    task.date ===
+                    today
+            );
+
+    }
+
+
+    if (
+        currentFilter ===
+        "upcoming"
+    ) {
+
+        filtered =
+            filtered.filter(
+                task =>
+                    task.date >=
+                    today
+            );
+
+    }
+
+
+    filtered.sort(
+        sortTasks
+    );
+
+
+    renderTaskList(
+        "plannerTasks",
+        filtered
+    );
+
+}
+
+
+/* =========================================================
+   SORT
+========================================================= */
+
+function sortTasks(
+    a,
+    b
+) {
+
+    const dateA =
+        new Date(
+            `${a.date}T${a.time || "00:00"}`
+        );
+
+
+    const dateB =
+        new Date(
+            `${b.date}T${b.time || "00:00"}`
+        );
+
+
+    return dateA - dateB;
+
+}
+
+
+/* =========================================================
+   TASK LIST
+========================================================= */
+
+function renderTaskList(
+    elementId,
+    list
+) {
+
+    const container =
+        document.getElementById(
+            elementId
+        );
+
+
+    if (!list.length) {
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                <i class="fas fa-calendar-xmark"></i>
+
+                <h3>
+                    No tasks yet
+                </h3>
+
+                <p>
+                    Add a study task to get started.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        list
+            .map(
+                task =>
+                    taskHTML(task)
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   TASK HTML
+========================================================= */
+
+function taskHTML(
+    task
+) {
+
+    const priorityClass =
+        `priority-${task.priority || "medium"}`;
+
+
+    const completedClass =
+        task.completed
+            ? "task-completed"
+            : "";
+
+
+    return `
+
+        <div
+            class="task-item ${completedClass}"
+        >
+
+            <div class="task-top">
+
+                <div class="task-info">
+
+                    <h3>
+                        ${escapeHTML(
+                            task.subject
+                        )}
+                    </h3>
+
+                    ${
+                        task.topic
+                            ? `
+                                <div class="task-topic">
+                                    ${escapeHTML(
+                                        task.topic
+                                    )}
+                                </div>
+                            `
+                            : ""
+                    }
+
+                    <div class="task-meta">
+
+                        <span class="badge">
+
+                            <i class="fas fa-calendar"></i>
+
+                            ${formatDate(
+                                task.date
+                            )}
+
+                        </span>
+
+
+                        <span class="badge">
+
+                            <i class="fas fa-clock"></i>
+
+                            ${task.time || "--:--"}
+
+                        </span>
+
+
+                        <span class="badge">
+
+                            ${task.duration} min
+
+                        </span>
+
+
+                        <span
+                            class="badge ${priorityClass}"
+                        >
+
+                            ${capitalize(
+                                task.priority
+                            )}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            ${
+                task.notes
+                    ? `
+                        <div
+                            style="
+                                color:var(--muted);
+                                font-size:11px;
+                                margin-top:10px;
+                                line-height:1.5;
+                            "
+                        >
+                            ${escapeHTML(
+                                task.notes
+                            )}
+                        </div>
+                    `
+                    : ""
+            }
+
+
+            <div class="task-actions">
+
+                <button
+                    class="task-action complete"
+                    type="button"
+                    onclick="toggleComplete(${task.id})"
+                >
+
+                    <i class="fas ${
+                        task.completed
+                            ? "fa-rotate-left"
+                            : "fa-check"
+                    }"></i>
+
+                    ${
+                        task.completed
+                            ? "Undo"
+                            : "Complete"
+                    }
+
+                </button>
+
+
+                <button
+                    class="task-action"
+                    type="button"
+                    onclick="startTaskTimer(${task.id})"
+                >
+
+                    <i class="fas fa-play"></i>
+
+                    Start
+
+                </button>
+
+
+                <button
+                    class="task-action"
+                    type="button"
+                    onclick="openTaskModal(${task.id})"
+                >
+
+                    <i class="fas fa-pen"></i>
+
+                    Edit
+
+                </button>
+
+
+                <button
+                    class="task-action delete"
+                    type="button"
+                    onclick="deleteTask(${task.id})"
+                >
+
+                    <i class="fas fa-trash"></i>
+
+                    Delete
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   COMPLETE
+========================================================= */
+
+function toggleComplete(
+    id
+) {
+
+    const task =
+        tasks.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!task) return;
+
+
+    task.completed =
+        !task.completed;
+
+
+    saveTasks();
+
+    renderAll();
+
+
+    showToast(
+        task.completed
+            ? "Task completed."
+            : "Task marked as pending."
+    );
+
+}
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+function deleteTask(
+    id
+) {
+
+    const task =
+        tasks.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!task) return;
+
+
+    if (
+        !confirm(
+            `Delete "${task.subject}"?`
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    tasks =
+        tasks.filter(
+            item =>
+                item.id !== id
+        );
+
+
+    saveTasks();
+
+    renderAll();
+
+
+    showToast(
+        "Task deleted."
+    );
+
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+function setTimer(
+    minutes,
+    button
+) {
+
+    pauseTimer();
+
+
+    timerSeconds =
+        minutes * 60;
+
+
+    timerInitialSeconds =
+        timerSeconds;
+
+
+    document
+        .querySelectorAll(
+            ".preset-btn"
+        )
+        .forEach(
+            item =>
+                item.classList.remove(
+                    "active"
+                )
+        );
+
+
+    if (button) {
+
+        button.classList.add(
+            "active"
+        );
+
+    }
+
+
+    updateTimerDisplay();
+
+}
+
+
+function customTimer() {
+
+    const value =
+        prompt(
+            "Enter study time in minutes (1-240):",
+            "30"
+        );
+
+
+    const minutes =
+        Number(value);
+
+
+    if (
+        !minutes ||
+        minutes < 1 ||
+        minutes > 240
+    ) {
+
+        return;
+
+    }
+
+
+    setTimer(
+        minutes,
+        null
+    );
+
+}
+
+
+function startTimer() {
+
+    if (timerRunning) {
+
+        return;
+
+    }
+
+
+    timerRunning =
+        true;
+
+
+    document.getElementById(
+        "timerStartBtn"
+    ).innerHTML = `
+
+        <i class="fas fa-pause"></i>
+
+        Running
+
+    `;
+
+
+    timerInterval =
+        setInterval(
+            function() {
+
+                timerSeconds--;
+
+
+                updateTimerDisplay();
+
+
+                if (
+                    timerSeconds <= 0
+                ) {
+
+                    finishTimer();
+
+                }
+
+            },
+            1000
+        );
+
+}
+
+
+function pauseTimer() {
+
+    timerRunning =
+        false;
+
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    timerInterval =
+        null;
+
+
+    document.getElementById(
+        "timerStartBtn"
+    ).innerHTML = `
+
+        <i class="fas fa-play"></i>
+
+        Start
+
+    `;
+
+}
+
+
+function resetTimer() {
+
+    pauseTimer();
+
+
+    timerSeconds =
+        timerInitialSeconds;
+
+
+    updateTimerDisplay();
+
+}
+
+
+function updateTimerDisplay() {
+
+    const minutes =
+        Math.floor(
+            timerSeconds / 60
+        );
+
+
+    const seconds =
+        timerSeconds % 60;
+
+
+    document.getElementById(
+        "timerDisplay"
+    ).textContent =
+
+        String(minutes)
+            .padStart(2, "0")
+
+        +
+
+        ":" +
+
+        String(seconds)
+            .padStart(2, "0");
+
+}
+
+
+function finishTimer() {
+
+    pauseTimer();
+
+
+    timerSeconds =
+        0;
+
+
+    updateTimerDisplay();
+
+
+    const select =
+        document.getElementById(
+            "timerTaskSelect"
+        );
+
+
+    const taskId =
+        Number(
+            select.value
+        );
+
+
+    if (taskId) {
+
+        const task =
+            tasks.find(
+                item =>
+                    item.id ===
+                    taskId
+            );
+
+
+        if (task) {
+
+            task.studySeconds =
+                Number(
+                    task.studySeconds || 0
+                ) +
+                timerInitialSeconds;
+
+
+            saveTasks();
+
+            renderAll();
+
+        }
+
+    }
+
+
+    showToast(
+        "Study session completed! 🎉"
+    );
+
+
+    if (
+        "Notification" in window &&
+        Notification.permission ===
+        "granted"
+    ) {
+
+        new Notification(
+            "HAICO Study Planner",
+            {
+                body:
+                    "Your study session is complete. Great work!"
+            }
+        );
+
+    }
+
+
+    timerSeconds =
+        timerInitialSeconds;
+
+
+    updateTimerDisplay();
+
+}
+
+
+function startTaskTimer(
+    id
+) {
+
+    const task =
+        tasks.find(
+            item =>
+                item.id === id
+        );
+
+
+    if (!task) return;
+
+
+    document.getElementById(
+        "timerTaskSelect"
+    ).value =
+        task.id;
+
+
+    setTimer(
+        Number(
+            task.duration || 25
+        ),
+        null
+    );
+
+
+    showSection(
+        "timer"
+    );
+
+
+    startTimer();
+
+}
+
+
+/* =========================================================
+   TIMER TASK SELECT
+========================================================= */
+
+function updateTimerTaskSelect() {
+
+    const select =
+        document.getElementById(
+            "timerTaskSelect"
+        );
+
+
+    const current =
+        select.value;
+
+
+    select.innerHTML = `
+
+        <option value="">
+            No task selected
+        </option>
+
+    `;
+
+
+    tasks
+        .filter(
+            task =>
+                !task.completed
+        )
+        .sort(
+            sortTasks
+        )
+        .forEach(
+            task => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    task.id;
+
+
+                option.textContent =
+                    `${task.subject} — ${task.date} ${task.time || ""}`;
+
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+    if (
+        tasks.some(
+            task =>
+                String(task.id) ===
+                String(current)
+        )
+    ) {
+
+        select.value =
+            current;
+
+    }
+
+}
+
+
+/* =========================================================
+   REMINDERS
+========================================================= */
+
+function renderReminders() {
+
+    const list =
+        [...tasks]
+            .filter(
+                task =>
+                    !task.completed
+            )
+            .sort(
+                sortTasks
+            );
+
+
+    renderTaskList(
+        "reminderTasks",
+        list
+    );
+
+}
+
+
+async function enableNotifications() {
+
+    if (
+        !("Notification" in window)
+    ) {
+
+        showToast(
+            "This browser does not support notifications."
+        );
+
+        return;
+
+    }
+
+
+    const permission =
+        await Notification.requestPermission();
+
+
+    if (
+        permission ===
+        "granted"
+    ) {
+
+        showToast(
+            "Notifications enabled."
+        );
+
+
+        new Notification(
+            "HAICO Study Planner",
+            {
+                body:
+                    "Notifications are now enabled."
+            }
+        );
+
+    } else {
+
+        showToast(
+            "Notification permission was not granted."
+        );
+
+    }
+
+}
+
+
+function startReminderChecker() {
+
+    checkReminders();
+
+
+    setInterval(
+        checkReminders,
+        30000
+    );
+
+}
+
+
+function checkReminders() {
+
+    const now =
+        new Date();
+
+
+    tasks.forEach(
+        task => {
+
+            if (
+                task.completed ||
+                task.reminderSent
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                !task.date ||
+                !task.time
+            ) {
+
+                return;
+
+            }
+
+
+            const taskDate =
+                new Date(
+                    `${task.date}T${task.time}`
+                );
+
+
+            const difference =
+                now - taskDate;
+
+
+            if (
+                difference >= 0 &&
+                difference < 60000
+            ) {
+
+                sendReminder(
+                    task
+                );
+
+
+                task.reminderSent =
+                    true;
+
+            }
+
+        }
+    );
+
+
+    saveTasks();
+
+}
+
+
+function sendReminder(
+    task
+) {
+
+    const message =
+        task.reminderMessage ||
+        `Time to study ${task.subject}`;
+
+
+    showToast(
+        message
+    );
+
+
+    if (
+        "Notification" in window &&
+        Notification.permission ===
+        "granted"
+    ) {
+
+        new Notification(
+            "HAICO Study Planner",
+            {
+                body:
+                    message,
+
+                icon:
+                    "ibn-haico.jpg"
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function formatDate(
+    date
+) {
+
+    if (!date) {
+
+        return "--";
+
+    }
+
+
+    const d =
+        new Date(
+            `${date}T00:00:00`
+        );
+
+
+    return d.toLocaleDateString(
+        settings.language === "sw"
+            ? "sw-TZ"
+            : "en-US",
+        {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+        }
+    );
+
+}
+
+
+function formatStudyTime(
+    seconds
+) {
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+
+    if (
+        minutes < 60
+    ) {
+
+        return `${minutes}m`;
+
+    }
+
+
+    const hours =
+        Math.floor(
+            minutes / 60
+        );
+
+
+    const remaining =
+        minutes % 60;
+
+
+    return `${hours}h ${remaining}m`;
+
+}
+
+
+function capitalize(
+    text
+) {
+
+    if (!text) return "";
+
+    return (
+        text.charAt(0).toUpperCase() +
+        text.slice(1)
+    );
+
+}
+
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value || ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(
+    message
+) {
+
+    const container =
+        document.getElementById(
+            "toastContainer"
+        );
+
+
+    const toast =
+        document.createElement(
+            "div"
+        );
+
+
+    toast.className =
+        "toast";
+
+
+    toast.textContent =
+        message;
+
+
+    container.appendChild(
+        toast
+    );
+
+
+    setTimeout(
+        function() {
+
+            toast.remove();
+
+        },
+        3000
+    );
+
+}
+
+
+/* =========================================================
+   BEFORE LEAVE
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    function() {
+
+        saveTasks();
+
+        saveSettings();
+
+    }
+);
+
+</script>
+
+</body>
+</html>
